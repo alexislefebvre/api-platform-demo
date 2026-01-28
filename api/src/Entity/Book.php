@@ -81,12 +81,17 @@ use Symfony\Component\Validator\Constraints as Assert;
         ],
     ],
     mcp: [
-        'api_docs' => new McpResource(
-            uri: 'resource://my-app/api-documentation',
-            name: 'API Documentation',
-            description: 'Complete API reference and guides',
+        'resource_doc' => new McpResource(
+            uri: 'resource://api-platform/documentation',
+            name: 'API-Platform-Documentation',
+            description: 'Official API Platform documentation',
             mimeType: 'text/markdown',
-//            provider: [self::class, 'provide']
+            provider: [self::class, 'provide']
+        ),
+        'list_books' => new McpResource(
+            uri: 'resource://my-app/list-books',
+            name: 'Books',
+            description: 'List Books',
         ),
     ]
 )]
@@ -216,9 +221,8 @@ class Book
     public static function provide(): self
     {
         $book = new self();
-        $book->setTitle('API Platform Guide');
-        $book->setIsbn('978-1234567890');
-        $book->setStatus('available');
+        $book->title = 'API Platform Guide';
+        $book->book = 'https://openlibrary.org/books/OL2055137M.json';
 
         return $book;
     }
