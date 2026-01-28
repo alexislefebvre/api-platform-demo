@@ -39,6 +39,17 @@ api_platform:
         scopes:
             openid: (required) Indicates that the application intends to use OIDC to verify the user's identity
 
+mcp:
+    client_transports:
+        http: true
+        stdio: false
+    http:
+        path: '/mcp'
+        session:
+            store: 'file'
+            directory: '%kernel.cache_dir%/mcp'
+            ttl: 3600
+
 services:
     _defaults:
         autowire: false

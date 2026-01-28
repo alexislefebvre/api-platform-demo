@@ -13,6 +13,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\McpResource;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
@@ -78,6 +79,15 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
+    ],
+    mcp: [
+        'api_docs' => new McpResource(
+            uri: 'resource://my-app/api-documentation',
+            name: 'API Documentation',
+            description: 'Complete API reference and guides',
+            mimeType: 'text/markdown',
+//            provider: [self::class, 'provide']
+        ),
     ]
 )]
 #[ApiResource(
@@ -201,5 +211,15 @@ class Book
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public static function provide(): self
+    {
+        $book = new self();
+        $book->setTitle('API Platform Guide');
+        $book->setIsbn('978-1234567890');
+        $book->setStatus('available');
+
+        return $book;
     }
 }
