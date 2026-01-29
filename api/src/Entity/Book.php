@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -14,13 +15,16 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\McpResource;
+use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
+use App\Entity\Book as BookEntity;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
+use App\State\Provider\BookProvider;
 use App\Validator\BookUrl;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -42,6 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
+    stateOptions: new Options(entityClass: BookEntity::class),
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
@@ -80,20 +85,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
     ],
-    mcp: [
-        'resource_doc' => new McpResource(
-            uri: 'resource://api-platform/documentation',
-            name: 'API-Platform-Documentation',
-            description: 'Official API Platform documentation',
-            mimeType: 'text/markdown',
-            provider: [self::class, 'provide']
-        ),
-        'list_books' => new McpResource(
-            uri: 'resource://my-app/list-books',
-            name: 'Books',
-            description: 'List Books',
-        ),
-    ]
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
@@ -112,7 +103,19 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
-    ]
+    ],
+    mcp: [
+        'list_books' => new McpTool(
+            description: 'List Books',
+            provider: BookProvider::class,
+//            structuredContent: false,
+        ),
+        'search_books' => new McpTool(
+            description: 'Search Books',
+            // TODO: create input DTO
+            provider: BookProvider::class,
+        ),
+    ],
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]
