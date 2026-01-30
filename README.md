@@ -21,6 +21,10 @@ Try it online at <https://demo.api-platform.com>.
 
 You can now go to https://localhost
 
+Usage:
+
+- MCP: you can call the MCP server with MCPJam: `NODE_TLS_REJECT_UNAUTHORIZED=0 npx --yes @mcpjam/inspector@1.5.7 --url https://localhost/mcp`. It should open a browser. Otherwise go to http://127.0.0.1:6274/ So far, one endpoint is available in the *Tools* tab. 
+
 ## What Can I Find In This Demo?
 
 This demo application contains several things you may be interested:
