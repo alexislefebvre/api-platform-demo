@@ -104,18 +104,6 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
     ],
-    mcp: [
-        'list_books' => new McpTool(
-            description: 'List Books',
-            provider: BookProvider::class,
-//            structuredContent: false,
-        ),
-        'search_books' => new McpTool(
-            description: 'Search Books',
-            // TODO: create input DTO
-            provider: BookProvider::class,
-        ),
-    ],
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]

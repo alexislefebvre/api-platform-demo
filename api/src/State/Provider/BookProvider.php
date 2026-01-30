@@ -20,8 +20,10 @@ final readonly class BookProvider implements ProviderInterface
 
     public function provide(Operation $operation, array $uriVariables = [], array $context = []): iterable|Book|null
     {
-//        $apiQueryParameters = $context['request']->attributes->get('_api_query_parameters');
+        $apiQueryParameters = $context['request']->attributes->get('_api_query_parameters');
         $bookRepository = $this->entityManager->getRepository(Book::class);
+
+        return $bookRepository->findAll();
 
 //        if ($operation instanceof CollectionOperationInterface) {
 //            if ($name = $apiQueryParameters['name'] ?? null) {
@@ -29,11 +31,11 @@ final readonly class BookProvider implements ProviderInterface
 //            } elseif ($isbn = $apiQueryParameters['isbn'] ?? null) {
 //                return $this->findBookByIsbn($isbn);
 //            }
-
-            return $bookRepository->findAll();
+//
+//            return $bookRepository->findAll();
 //        }
-
-        return $bookRepository->find($uriVariables['id'] ?? null);
+//
+//        return $bookRepository->find($uriVariables['id'] ?? null);
     }
 
     private function findBookByName(string $name): iterable
