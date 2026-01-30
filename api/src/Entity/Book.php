@@ -7,6 +7,7 @@ namespace App\Entity;
 use ApiPlatform\Doctrine\Common\Filter\SearchFilterInterface;
 use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
@@ -16,6 +17,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
+use App\Entity\Book as BookEntity;
 use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
@@ -41,6 +43,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[ApiResource(
     uriTemplate: '/admin/books{._format}',
+    stateOptions: new Options(entityClass: BookEntity::class),
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
     operations: [
         new GetCollection(
@@ -78,7 +81,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
-    ]
+    ],
 )]
 #[ApiResource(
     types: ['https://schema.org/Book', 'https://schema.org/Offer'],
@@ -97,7 +100,7 @@ use Symfony\Component\Validator\Constraints as Assert;
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/admin/books/{id}{._format}"))',
             '@=iri(object, ' . UrlGeneratorInterface::ABS_URL . ', get_operation(object, "/books/{id}{._format}"))',
         ],
-    ]
+    ],
 )]
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 #[UniqueEntity(fields: ['book'])]
@@ -201,5 +204,14 @@ class Book
     public function getId(): Uuid
     {
         return $this->id;
+    }
+
+    public static function provide(): self
+    {
+        $book = new self();
+        $book->title = 'API Platform Guide';
+        $book->book = 'https://openlibrary.org/books/OL2055137M.json';
+
+        return $book;
     }
 }
