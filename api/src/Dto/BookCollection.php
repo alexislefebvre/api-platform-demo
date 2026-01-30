@@ -8,7 +8,7 @@ use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\McpTool;
 use App\Entity\Book as BookEntity;
-use App\State\Provider\BookProvider;
+use App\State\Processor\BookReadProcessor;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 
 #[ApiResource(
@@ -18,8 +18,8 @@ use Symfony\Component\ObjectMapper\Attribute\Map;
     mcp: [
         'dto_list_books' => new McpTool(
             description: 'List Books',
-            provider: BookProvider::class,
-            structuredContent: false,
+            processor: BookReadProcessor::class,
+            structuredContent: true,
         ),
     ],
 )]
