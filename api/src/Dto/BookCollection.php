@@ -4,31 +4,30 @@ declare(strict_types=1);
 
 namespace App\Dto;
 
-use ApiPlatform\Doctrine\Orm\State\Options;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\McpTool;
-use App\Entity\Book as BookEntity;
-use App\State\Processor\BookReadProcessor;
-use Symfony\Component\ObjectMapper\Attribute\Map;
+use App\State\BookListProvider;
 
 #[ApiResource(
     shortName: 'Book',
-    stateOptions: new Options(entityClass: BookEntity::class),
     jsonStream: true,
+    operations: [],
     mcp: [
         'dto_list_books' => new McpTool(
             description: 'List Books',
-            processor: BookReadProcessor::class,
+            provider: BookListProvider::class,
+            // this break `context['output']['gen_id'] = $propertyMetadata->getGenId() ?? true;` in `OperationContextTrait.php`
+//            output: BookCollection::class,
             structuredContent: true,
         ),
     ],
 )]
-#[Map(source: BookEntity::class)]
-final class BookCollection
-{
-    public string $id;
+final class BookCollection {
+    /** @var array<int, object> */
+    public function __construct(array $members) {
+        $this->members = $members;
+    }
 
-//    #[Map(source: 'title')]
-//    public string $name;
-    public string $title;
+    /** @var array<int, object> */
+    public array $members = [];
 }
