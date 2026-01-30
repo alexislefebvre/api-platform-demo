@@ -14,8 +14,6 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\McpResource;
-use ApiPlatform\Metadata\McpTool;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
@@ -24,7 +22,6 @@ use App\Enum\BookCondition;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
-use App\State\Provider\BookProvider;
 use App\Validator\BookUrl;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -207,14 +204,5 @@ class Book
     public function getId(): Uuid
     {
         return $this->id;
-    }
-
-    public static function provide(): self
-    {
-        $book = new self();
-        $book->title = 'API Platform Guide';
-        $book->book = 'https://openlibrary.org/books/OL2055137M.json';
-
-        return $book;
     }
 }
